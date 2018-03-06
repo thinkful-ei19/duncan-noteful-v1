@@ -10,6 +10,7 @@ const notes = simDB.initialize(data);
 
 const app = express();
 app.use(express.static('public'));
+app.use(express.json());
 
 function requestLogger(req, res, next){
   const now = new Date();
@@ -28,29 +29,46 @@ app.get('/api/notes', (req, res, next) => {
     res.json(list);
   });
 });
-// notes.find(1005, (err, item) => {
-//     if (err) {
-//       console.error(err);
-//     }
-//     if (item) {
-//       console.log(item);
-//     } else {
-//       console.log('not found');
-//     }
-//   });
+
 app.get('/api/notes/:id', (req, res, next) => {
   const {id} = req.params;
   notes.find(id, (err, item) => {
     if (err) {
-      next(err);
+      return next(err);
     }
     if (item) {
       res.json(item);
     } else {
-      res.json('not found');
+      next();
     }
   });
 });
+
+app.put('/api/notes/:id', (req, res, next) => {
+  const {id} = req.params;
+
+  /***** Never trust users - validate input *****/
+  const updateObj = {};
+  const updateFields = ['title', 'content'];
+
+  updateFields.forEach(field => {
+    if (field in req.body) {
+      updateObj[field] = req.body[field];
+    }
+  });
+
+  notes.update(id, updateObj, (err, item) => {
+    if (err) {
+      return next(err);
+    }
+    if (item) {
+      res.json(item);
+    } else {
+      next();
+    }
+  });
+});
+
 
 app.get('/boom', (req, res, next) => {
   throw new Error('Boom!!');
