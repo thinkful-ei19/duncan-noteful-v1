@@ -5,6 +5,8 @@
 const express = require('express');
 const data = require('./db/notes');
 const {PORT} = require('./config');
+const simDB = require('./db/simDB'); 
+const notes = simDB.initialize(data);
 
 const app = express();
 app.use(express.static('public'));
@@ -40,6 +42,7 @@ app.use(function(req, res, next){
   let err = new Error('Not Found');
   err.status = 404;
   res.status(404).json({message: 'Not Found'});
+  next(err);
 });
 
 app.use(function(err, req, res, next){
