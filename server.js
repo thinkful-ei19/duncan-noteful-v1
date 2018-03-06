@@ -8,13 +8,6 @@ const data = require('./db/notes');
 const app = express();
 app.use(express.static('public'));
 
-app.listen(8080, function () {
-  console.info(`Server listening on ${this.address().port}`);
-}).on('error', err => {
-  console.error(err);
-});
-
-
 app.get('/api/notes', (req, res) => {
   const {searchTerm} = req.query;
   const newData = data.filter(item => item.title.includes(searchTerm));
@@ -27,4 +20,8 @@ app.get('/api/notes/:id', (req, res) => {
   res.json(newData);
 });
 
-// INSERT EXPRESS APP CODE HERE...
+app.listen(8080, function () {
+  console.info(`Server listening on ${this.address().port}`);
+}).on('error', err => {
+  console.error(err);
+});
