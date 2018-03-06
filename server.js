@@ -10,8 +10,12 @@ app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
   const {searchTerm} = req.query;
-  const newData = data.filter(item => item.title.includes(searchTerm));
-  res.json(newData);
+  if (searchTerm){
+    const newData = data.filter(item => item.title.includes(searchTerm));
+    res.json(newData);
+  } else {
+    res.json(data);
+  }
 });
 
 app.get('/api/notes/:id', (req, res) => {
