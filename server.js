@@ -18,20 +18,38 @@ function requestLogger(req, res, next){
 }
 app.use(requestLogger);
 
-app.get('/api/notes', (req, res) => {
-  const {searchTerm} = req.query;
-  if (searchTerm){
-    const newData = data.filter(item => item.title.includes(searchTerm));
-    res.json(newData);
-  } else {
-    res.json(data);
-  }
+app.get('/api/notes', (req, res, next) => {
+  const { searchTerm } = req.query;
+  
+  notes.filter(searchTerm, (err, list) => {
+    if (err) {
+      return next(err);
+    }
+    res.json(list);
+  });
 });
-
-app.get('/api/notes/:id', (req, res) => {
+// notes.find(1005, (err, item) => {
+//     if (err) {
+//       console.error(err);
+//     }
+//     if (item) {
+//       console.log(item);
+//     } else {
+//       console.log('not found');
+//     }
+//   });
+app.get('/api/notes/:id', (req, res, next) => {
   const {id} = req.params;
-  let newData = data.find(item => item.id === parseInt(id));
-  res.json(newData);
+  notes.find(id, (err, item) => {
+    if (err) {
+      next(err);
+    }
+    if (item) {
+      res.json(item);
+    } else {
+      res.json('not found');
+    }
+  });
 });
 
 app.get('/boom', (req, res, next) => {
