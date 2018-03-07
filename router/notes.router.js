@@ -8,7 +8,7 @@ const simDB = require('../db/simDB');
 const notes = simDB.initialize(data);
 
 
-router.get('/api/notes', (req, res, next) => {
+router.get('/notes', (req, res, next) => {
   const { searchTerm } = req.query;
     
   notes.filter(searchTerm, (err, list) => {
@@ -19,7 +19,7 @@ router.get('/api/notes', (req, res, next) => {
   });
 });
   
-router.get('/api/notes/:id', (req, res, next) => {
+router.get('/notes/:id', (req, res, next) => {
   const {id} = req.params;
   notes.find(id, (err, item) => {
     if (err) {
@@ -33,7 +33,7 @@ router.get('/api/notes/:id', (req, res, next) => {
   });
 });
   
-router.put('/api/notes/:id', (req, res, next) => {
+router.put('/notes/:id', (req, res, next) => {
   const {id} = req.params;
   
   /***** Never trust users - validate input *****/
@@ -52,6 +52,29 @@ router.put('/api/notes/:id', (req, res, next) => {
     }
     if (item) {
       res.json(item);
+    } else {
+      next();
+    }
+  });
+});
+
+router.post('/notes', (req, res, next) => {
+  const { title, content } = req.body;
+  
+  const newItem = { title, content };
+  /***** Never trust users - validate input *****/
+  if (!newItem.title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+  
+  notes.create(newItem, (err, item) => {
+    if (err) {
+      return next(err);
+    }
+    if (item) {
+      res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
     } else {
       next();
     }

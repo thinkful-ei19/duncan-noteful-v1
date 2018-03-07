@@ -69,16 +69,16 @@ app.use(express.json());
 //   });
 // });
 
-app.use('/v1', notesRouter);
+app.use('/v1/api', notesRouter);
 
-// app.get('/boom', (req, res, next) => {
-//   throw new Error('Boom!!');
-// });
+app.get('/boom', (req, res, next) => {
+  throw new Error('Boom!!');
+});
 
 app.use(function(req, res, next){
   let err = new Error('Not Found');
   err.status = 404;
-  res.status(404).json({message: 'Not Found'});
+  // res.status(404).json({message: 'Not Found'});
   next(err);
 });
 
