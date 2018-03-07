@@ -96,7 +96,7 @@ const noteful = (function () {
       }
 
     });
-  
+  }
 
   function handleNoteStartNewSubmit() {
     $('.js-start-new-note-form').on('submit', event => {

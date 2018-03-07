@@ -4,11 +4,12 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const data = require('./db/notes');
+// const data = require('./db/notes');
 const {PORT} = require('./config');
-const simDB = require('./db/simDB'); 
+// const simDB = require('./db/simDB'); 
+// const notes = simDB.initialize(data);
 
-const notes = simDB.initialize(data);
+const notesRouter = require('./router/notes.router'); 
 
 const app = express();
 
@@ -18,60 +19,61 @@ app.use(express.static('public'));
 app.use(express.json());
 
 
-app.get('/api/notes', (req, res, next) => {
-  const { searchTerm } = req.query;
+// app.get('/api/notes', (req, res, next) => {
+//   const { searchTerm } = req.query;
   
-  notes.filter(searchTerm, (err, list) => {
-    if (err) {
-      return next(err);
-    }
-    res.json(list);
-  });
-});
+//   notes.filter(searchTerm, (err, list) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     res.json(list);
+//   });
+// });
 
-app.get('/api/notes/:id', (req, res, next) => {
-  const {id} = req.params;
-  notes.find(id, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
-});
+// app.get('/api/notes/:id', (req, res, next) => {
+//   const {id} = req.params;
+//   notes.find(id, (err, item) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     if (item) {
+//       res.json(item);
+//     } else {
+//       next();
+//     }
+//   });
+// });
 
-app.put('/api/notes/:id', (req, res, next) => {
-  const {id} = req.params;
+// app.put('/api/notes/:id', (req, res, next) => {
+//   const {id} = req.params;
 
-  /***** Never trust users - validate input *****/
-  const updateObj = {};
-  const updateFields = ['title', 'content'];
+//   /***** Never trust users - validate input *****/
+//   const updateObj = {};
+//   const updateFields = ['title', 'content'];
 
-  updateFields.forEach(field => {
-    if (field in req.body) {
-      updateObj[field] = req.body[field];
-    }
-  });
+//   updateFields.forEach(field => {
+//     if (field in req.body) {
+//       updateObj[field] = req.body[field];
+//     }
+//   });
 
-  notes.update(id, updateObj, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
-});
+//   notes.update(id, updateObj, (err, item) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     if (item) {
+//       res.json(item);
+//     } else {
+//       next();
+//     }
+//   });
+// });
 
+app.use('/v1', notesRouter);
 
-app.get('/boom', (req, res, next) => {
-  throw new Error('Boom!!');
-});
+// app.get('/boom', (req, res, next) => {
+//   throw new Error('Boom!!');
+// });
 
 app.use(function(req, res, next){
   let err = new Error('Not Found');
