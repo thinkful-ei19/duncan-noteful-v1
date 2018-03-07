@@ -81,4 +81,21 @@ router.post('/notes', (req, res, next) => {
   });
 });
 
+router.delete('/notes/:id', (req, res, next) => {
+  const {id} = req.params;
+
+  notes.delete(id, (err, item) => {
+    if (err) {
+      const err = new Error('Delete Id not matching an id in DB');
+      err.status = 400;
+      next(err);
+    }
+    if (item) {
+      res.sendStatus(204);
+    } else {
+      next();
+    }
+  });
+});
+
 module.exports = router;

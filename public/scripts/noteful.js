@@ -90,8 +90,15 @@ const noteful = (function () {
         });
 
       } else {
+        
+        api.create(noteObj, updateResponse => {
+          store.currentNote = updateResponse;
 
-        console.log('Create Note, coming soon...');
+          api.search(store.currentSearchTerm, updateResponse =>{
+            store.notes = updateResponse;
+            render();
+          });
+        });
 
       }
 
@@ -101,9 +108,8 @@ const noteful = (function () {
   function handleNoteStartNewSubmit() {
     $('.js-start-new-note-form').on('submit', event => {
       event.preventDefault();
-
-      console.log('Start New Note, coming soon...');
-
+      store.currentNote = false;
+      render();
     });
   }
 

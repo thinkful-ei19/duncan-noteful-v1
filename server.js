@@ -78,7 +78,7 @@ app.get('/boom', (req, res, next) => {
 app.use(function(req, res, next){
   let err = new Error('Not Found');
   err.status = 404;
-  // res.status(404).json({message: 'Not Found'});
+  res.status(404).json({message: 'Not Found'});
   next(err);
 });
 
