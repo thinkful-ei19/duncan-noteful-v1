@@ -3,21 +3,20 @@
 // TEMP: Simple In-Memory Database
 
 const express = require('express');
+const morgan = require('morgan');
 const data = require('./db/notes');
 const {PORT} = require('./config');
 const simDB = require('./db/simDB'); 
+
 const notes = simDB.initialize(data);
 
 const app = express();
+
+app.use(morgan('dev'));
+
 app.use(express.static('public'));
 app.use(express.json());
 
-function requestLogger(req, res, next){
-  const now = new Date();
-  console.log(`${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
-  next();
-}
-app.use(requestLogger);
 
 app.get('/api/notes', (req, res, next) => {
   const { searchTerm } = req.query;
