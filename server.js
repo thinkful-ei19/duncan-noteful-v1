@@ -75,14 +75,15 @@ app.get('/boom', (req, res, next) => {
   throw new Error('Boom!!');
 });
 
-app.use(function(req, res, next){
-  let err = new Error('Not Found');
-  err.status = 404;
-  res.status(404).json({message: 'Not Found'});
-  next(err);
-});
+// app.use(function(req, res, next){
+//   let err = new Error('Not Found');
+//   err.status = 404;
+//   res.status(404).json({message: 'Not Found'});
+//   next(err);
+// });
 
 app.use(function(err, req, res, next){
+  console.log(err);
   res.status(err.status || 500);
   res.json({
     message:err.message,
