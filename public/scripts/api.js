@@ -6,7 +6,7 @@ const api = {
   search: function (query, callback) {
     $.ajax({
       type: 'GET',
-      url: '/v1/api/notes/',
+      url: '/api/notes/',
       dataType: 'json',
       data: query,
       success: callback
@@ -17,7 +17,7 @@ const api = {
     $.ajax({
       type: 'GET',
       dataType: 'json',
-      url: `/v1/api/notes/${id}`,
+      url: `/api/notes/${id}`,
       success: callback
     });
   },
@@ -25,7 +25,7 @@ const api = {
   update: function(id, obj, callback) {
     $.ajax({
       type: 'PUT',
-      url: `/v1/api/notes/${id}`,
+      url: `/api/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify(obj),
@@ -36,7 +36,7 @@ const api = {
   create: function (obj, callback) {
     $.ajax({
       type: 'POST',
-      url: '/v1/api/notes',
+      url: '/api/notes',
       contentType: 'application/json',
       dataType: 'json',
       processData: false,
@@ -48,7 +48,7 @@ const api = {
   delete: function(id, callback) {
     $.ajax({
       type: 'DELETE',
-      url: `/v1/api/notes/${id}`,
+      url: `/api/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
       // processData: false,

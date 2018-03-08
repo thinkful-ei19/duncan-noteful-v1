@@ -69,7 +69,7 @@ app.use(express.json());
 //   });
 // });
 
-app.use('/v1/api', notesRouter);
+app.use('/api', notesRouter);
 
 app.get('/boom', (req, res, next) => {
   throw new Error('Boom!!');

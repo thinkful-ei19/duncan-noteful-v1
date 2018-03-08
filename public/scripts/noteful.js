@@ -120,6 +120,7 @@ const noteful = (function () {
       const noteId = getNoteIdFromElement(event.currentTarget);
       api.delete(noteId, () => {
         store.deleteNote(noteId);
+        store.currentNote = false;
         render();
       });
       
