@@ -65,9 +65,9 @@ const noteful = (function () {
     });
   }
 
-  function refreshSearchTerm(){
-    api.search(store.currentSearchTerm).then(searchResponse => {
-      store.notes = searchResponse;
+  function refreshSearchTerm(searchTerm){
+    api.search(searchTerm).then(response => {
+      store.notes = response;
       render();
     });
   }
@@ -89,7 +89,7 @@ const noteful = (function () {
         api.update(store.currentNote.id, noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
-            refreshSearchTerm();
+            refreshSearchTerm(store.currentSearchTerm);
       
           });
 
@@ -97,7 +97,7 @@ const noteful = (function () {
         
         api.create(noteObj).then(updateResponse => {
           store.currentNote = updateResponse;
-          refreshSearchTerm();
+          refreshSearchTerm(store.currentSearchTerm);
         });
 
       }
@@ -119,13 +119,18 @@ const noteful = (function () {
 
       const noteId = getNoteIdFromElement(event.currentTarget);
       
-      api.delete(noteId).then(() => {
-        store.deleteNote(noteId);
-        store.currentNote = false;
-        render();
-      });
-      
-      
+      api.delete(noteId)
+        .then(() => {
+          refreshSearchTerm(store.currentNote);
+        });
+
+      // My original solution included a new store function, replaced it with ^
+      // api.delete(noteId)
+      //   .then(() => {
+      //     store.deleteNote(noteId);
+      //     store.currentNote = false;
+      //     render();
+      //   });
     });
   }
 
@@ -140,8 +145,9 @@ const noteful = (function () {
 
   // This object contains the only exposed methods from this module:
   return {
-    render: render,
-    bindEventListeners: bindEventListeners,
+    render,
+    bindEventListeners,
+    refreshSearchTerm
   };
 
 }());
