@@ -65,6 +65,13 @@ const noteful = (function () {
     });
   }
 
+  function refreshSearchTerm(){
+    api.search(store.currentSearchTerm).then(searchResponse => {
+      store.notes = searchResponse;
+      render();
+    });
+  }
+
   function handleNoteFormSubmit() {
     $('.js-note-edit-form').on('submit', function (event) {
       event.preventDefault();
@@ -82,23 +89,15 @@ const noteful = (function () {
         api.update(store.currentNote.id, noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
+            refreshSearchTerm();
       
-            api.search(store.currentSearchTerm).then(searchResponse => {
-              store.notes = searchResponse;
-              render();
-            });
-
           });
 
       } else {
         
         api.create(noteObj).then(updateResponse => {
           store.currentNote = updateResponse;
-
-          api.search(store.currentSearchTerm).then(updateResponse =>{
-            store.notes = updateResponse;
-            render();
-          });
+          refreshSearchTerm();
         });
 
       }
