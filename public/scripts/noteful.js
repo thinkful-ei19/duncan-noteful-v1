@@ -90,7 +90,6 @@ const noteful = (function () {
           .then(updateResponse => {
             store.currentNote = updateResponse;
             refreshSearchTerm(store.currentSearchTerm);
-      
           });
 
       } else {

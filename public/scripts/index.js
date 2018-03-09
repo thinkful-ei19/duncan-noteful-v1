@@ -3,6 +3,5 @@
 
 $(document).ready(function () {
   noteful.bindEventListeners();
-
   noteful.refreshSearchTerm({});
 });
