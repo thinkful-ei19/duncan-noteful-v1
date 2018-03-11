@@ -49,13 +49,7 @@ describe('404 handler', function () {
 });
 
 describe('Endpoint Tests', function (){
-//   before(function() {
-//     return runServer();
-//   });
-    
-//   after(function() {
-//     return closeServer();
-//   });
+
 
 
   it('should list all notes', function (){
@@ -130,6 +124,26 @@ describe('Endpoint Tests', function (){
       });
   });
 
+  it('if a title is not used when posting a note, a 400 should be flagged for missing title',function(){
+    const incorrectItem = {};
+    return chai.request(app)
+      .post('/api/notes')
+      .send(incorrectItem)
+      .catch(err => err.response)
+      .then(function(res){
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal({
+          'message': 'Missing `title` in request body',
+          'error': {
+            'status': 400
+          }
+        });
+
+      });
+  });
+
   it('should delete a note', function(){
     return chai.request(app)
       .get('/api/notes/')
@@ -139,6 +153,24 @@ describe('Endpoint Tests', function (){
       })
       .then(function(res) {
         expect(res).to.have.status(204);
+      });
+  });
+
+  it('if trying to delete a non existing id, should flag a 400 for incorrect id',function(){
+    return chai.request(app)
+      .delete('/api/notes/badid')
+      .catch(err => err.response)
+      .then(function(res){
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal({
+          'message': 'Delete Id not matching an id in DB',
+          'error': {
+            'status': 400
+          }
+        });
+
       });
   });
   
